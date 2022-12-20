@@ -24,3 +24,4 @@ MODIFY algorithm 2 raja
 modify algorithm 2 galvin
 SHOWC algorithm
 SHOWP galvin
+SHOWP thomas
