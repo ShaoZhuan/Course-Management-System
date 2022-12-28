@@ -8,7 +8,7 @@ public class Student {
 	String deg;
 	int rollno;
 	int year;
-	List<String> coursetaken = new ArrayList<String>();
+	List<String> coursetaken = new ArrayList<>();
 	
 	public Student(String name,int roll,String deg,int yr){
 		this.name = name;
@@ -60,7 +60,7 @@ public class Student {
 		System.out.println("Student_Deg:" + Index.s.get(myidx).deg + " ");
 		System.out.println("Student_Rollno:" + Index.s.get(myidx).rollno + " ");
 		System.out.println("Student_Year:" + Index.s.get(myidx).year + " ");
-		if(Index.s.get(myidx).coursetaken.size()==0){
+		if(Index.s.get(myidx).coursetaken.isEmpty()){
 			System.out.println("Student_courses: No_courses_enrolled");
 		}
 		else{
@@ -71,4 +71,8 @@ public class Student {
 			System.out.println();
 		}
 	}
+        
+        public void generateTimetable(){
+            
+        }
 }
