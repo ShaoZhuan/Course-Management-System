@@ -4,18 +4,26 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
+
 public class Index {
 
-    static List<Prof> p = new ArrayList<Prof>();
-    static List<Course> c = new ArrayList<Course>();
-    static List<Student> s = new ArrayList<Student>();
+    static List<Prof> p = new ArrayList<>();
+    static List<Course> c = new ArrayList<>();
+    static List<Student> s = new ArrayList<>();
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) {
+        try {
+            readFile();
+        } catch (FileNotFoundException ex) {
+            System.out.println("File not found");
+        }
+    }
+    
+    public static void readFile() throws FileNotFoundException{
         Scanner ip = new Scanner(new File("input.txt"));
         int x, y, yr;
         String a, b, n, d, input;
         while (ip.hasNext()) {
-            System.out.println("");
             input = ip.next();
             if (input.equalsIgnoreCase("ADDS")) {
                 a = ip.next();
@@ -47,75 +55,103 @@ public class Index {
                         System.out.println("No_such_Professor");
                     }
                 }
-            } else if (input.equalsIgnoreCase("ENROLL")) {
-                a = ip.next();
-                b = ip.next();
-                int temp = scheck(b);
-                if (s.size() == 0 || temp == s.size()) {
-                    System.out.println("No_such_Student");
-                } else {
-                    Student t = s.get(temp);
-                    if (s.get(temp).coursetaken.contains(a)) {
-                        System.out.println("Course_Already_Enrolled");
-                    } else {
-                        t.enroll(a, temp);
-                    }
-                }
-            } else if (input.equalsIgnoreCase("UNENROLL")) {
-                a = ip.next();
-                b = ip.next();
-                int temp = scheck(b);
-                if (s.size() == 0 || temp == s.size()) {
-                    System.out.println("No_such_Student");
-                } else {
-                    Student t = s.get(temp);
-                    if (s.get(temp).coursetaken.contains(a)) {
-                        t.unenroll(a, temp);
-                    } else {
-                        System.out.println("Course_not_found_to_unroll");
-                    }
-                }
-            } else if (input.equalsIgnoreCase("SHOWS")) {
-                a = ip.next();
-                int temp = scheck(a);
-                if (s.size() == 0 || temp == s.size()) {
-                    System.out.println("No_such_Student");
-                } else {
-                    Student.show(temp);
-                }
-            } else if (input.equalsIgnoreCase("SHOWC")) {
-                a = ip.next();
-                if (ccheck(a)) {
-                    Course.show(a);
-                } else {
-                    System.out.println("No_Such_Course");
-                }
-            } else if (input.equalsIgnoreCase("MODIFY")) {
-                a = ip.next();
-                x = ip.nextInt();
-                b = ip.next();
-                if (ccheck(a)) {
-                    if (pcheck(b, a)) {
-                        Course.modify(a, x, b);
-                        System.out.println("Modify_Success");
-                    } else {
-                        System.out.println("No_Such_Professor_to_Modify_in_course");
-                    }
-                } else {
-                    System.out.println("No_Such_Course_to_Modify");
-                }
-            } else if (input.equalsIgnoreCase("SHOWP")) {
-                a = ip.next();
-                int pidx = pcheck2(a);
-                if (p.size() == 0 || pidx == p.size()) {
-                    System.out.println("No_Such_Professor");
-                } else {
-                    Prof.show(pidx);
-                }
+//            } else if (input.equalsIgnoreCase("ENROLL")) {
+//                a = ip.next();
+//                b = ip.next();
+//                int temp = scheck(b);
+//                if (s.size() == 0 || temp == s.size()) {
+//                    System.out.println("No_such_Student");
+//                } else {
+//                    Student t = s.get(temp);
+//                    if (s.get(temp).coursetaken.contains(a)) {
+//                        System.out.println("Course_Already_Enrolled");
+//                    } else {
+//                        t.enroll(a, temp);
+//                    }
+//                }
+//            } else if (input.equalsIgnoreCase("UNENROLL")) {
+//                a = ip.next();
+//                b = ip.next();
+//                int temp = scheck(b);
+//                if (s.size() == 0 || temp == s.size()) {
+//                    System.out.println("No_such_Student");
+//                } else {
+//                    Student t = s.get(temp);
+//                    if (s.get(temp).coursetaken.contains(a)) {
+//                        t.unenroll(a, temp);
+//                    } else {
+//                        System.out.println("Course_not_found_to_unroll");
+//                    }
+//                }
+//            } else if (input.equalsIgnoreCase("SHOWS")) {
+//                a = ip.next();
+//                int temp = scheck(a);
+//                if (s.size() == 0 || temp == s.size()) {
+//                    System.out.println("No_such_Student");
+//                } else {
+//                    Student.show(temp);
+//                }
+//            } else if (input.equalsIgnoreCase("SHOWC")) {
+//                a = ip.next();
+//                if (ccheck(a)) {
+//                    Course.show(a);
+//                } else {
+//                    System.out.println("No_Such_Course");
+//                }
+//            } else if (input.equalsIgnoreCase("MODIFY")) {
+//                a = ip.next();
+//                x = ip.nextInt();
+//                b = ip.next();
+//                if (ccheck(a)) {
+//                    if (pcheck(b, a)) {
+//                        Course.modify(a, x, b);
+//                        System.out.println("Modify_Success");
+//                    } else {
+//                        System.out.println("No_Such_Professor_to_Modify_in_course");
+//                    }
+//                } else {
+//                    System.out.println("No_Such_Course_to_Modify");
+//                }
+//            } else if (input.equalsIgnoreCase("SHOWP")) {
+//                a = ip.next();
+//                int pidx = pcheck2(a);
+//                if (p.size() == 0 || pidx == p.size()) {
+//                    System.out.println("No_Such_Professor");
+//                } else {
+//                    Prof.show(pidx);
+//                }
             }
         }
         ip.close();
+        System.out.println("Student:");
+        displayS();
+        System.out.println("Professor:");
+        displayP();
+        System.out.println("Course:");
+        displayC();
     }
+    
+    public static void displayS(){
+        for (int i = 0; i < s.size(); i++) {
+            Student.show(i);
+            System.out.println();
+        }
+    }
+    
+    public static void displayP(){
+        for (int i = 0; i < p.size(); i++) {
+            Prof.show(i);
+            System.out.println();
+        }
+    }
+    
+    public static void displayC(){
+        for (int i = 0; i < c.size(); i++) {
+            Course.show(c.get(i).name);
+            System.out.println();
+        }
+    }
+    
 
     public static int scheck(String name) {
         for (int i = 0; i < s.size(); i++) {
