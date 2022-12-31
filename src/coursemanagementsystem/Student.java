@@ -5,15 +5,13 @@ import java.util.List;
 
 public class Student {
 	String name;
-	String deg;
 	int rollno;
 	int year;
 	List<String> coursetaken = new ArrayList<>();
 	
-	public Student(String name,int roll,String deg,int yr){
+	public Student(String name,int roll,int yr){
 		this.name = name;
 		this.rollno = roll;
-		this.deg = deg;
 		this.year = yr;
 	}
 	public void enroll(String a,int myidx){		
@@ -24,7 +22,7 @@ public class Student {
 				break;
 			}
 		}
-		if((Index.c.get(cidx).d.equals(Index.s.get(myidx).deg))&&(Index.c.get(cidx).yr<=Index.s.get(myidx).year)&&(Index.s.get(myidx).coursetaken.contains(Index.c.get(cidx).other)||Index.c.get(cidx).other==null)&&Index.c.get(cidx).max>0){			
+		if((Index.c.get(cidx).yr<=Index.s.get(myidx).year)&&Index.c.get(cidx).max>0){			
 			Index.s.get(myidx).coursetaken.add(a);
 			Index.c.get(cidx).studenrolled.add(Index.s.get(myidx).name);
 			Index.c.get(cidx).max--;			
@@ -57,7 +55,6 @@ public class Student {
 	
 	public static void show(int myidx){
 		System.out.println("Student_Name:" + Index.s.get(myidx).name + " ");
-		System.out.println("Student_Deg:" + Index.s.get(myidx).deg + " ");
 		System.out.println("Student_Rollno:" + Index.s.get(myidx).rollno + " ");
 		System.out.println("Student_Year:" + Index.s.get(myidx).year + " ");
 		if(Index.s.get(myidx).coursetaken.isEmpty()){

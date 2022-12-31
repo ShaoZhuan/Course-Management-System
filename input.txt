@@ -1,14 +1,14 @@
-ADDS anurag 1 mtech 1
+ADDS anurag 1 1
 ADDP thomas algo
 ADDP galvin os
 ADDP forozan network
-ADDC operatingsys 5 galvin mtech 1 NULL
-ADDC algorithm 3 raja mtech 1 operatingsys
-ADDC algorithm 3 thomas mtech 1 operatingsys
-ADDS bansal 2 mtech 2
+ADDC operatingsys 5 galvin 1 NULL
+ADDC algorithm 3 raja 1
+ADDC algorithm 3 thomas 1
+ADDS bansal 2 2
 ENROLL operatingsys anurag
 ENROLL algorithm anurag
 UNENROLL network anurag
 UNENROLL algorithm anurag
-MODIFY algorithm 2 raja
-modify algorithm 2 galvin
+MODIFY algorithm raja
+modify algorithm galvin
