@@ -67,7 +67,7 @@ public class Index {
                                 if (courseChoice > c.size()) {
                                     System.out.println("Please choose the correct course number to enroll");
                                 } else {
-                                    enroll(c.get(courseChoice - 1).name, name);
+                                    unenroll(c.get(courseChoice - 1).name, name);
                                 }
                             }
                             case 3 -> {
