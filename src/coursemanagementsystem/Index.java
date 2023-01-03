@@ -176,7 +176,7 @@ public class Index {
                     }
                 }
                 case 3 -> {
-                    break;
+                    System.exit(0);
                 }
                 default ->
                     System.out.println("Invalid Choice. Try Again.");
