@@ -37,6 +37,7 @@ public class Index {
                         System.out.println("No such student. Please enter correct name.");
                         continue;
                     }
+                    Student t = s.get(temp);
                     for (;;) {
                         System.out.print("Choose 1 for enroll course, Choose 2 for unenroll course, Choose 3 to generate timetable, Choose 4 to exit the program: ");
                         int choice = sc.nextInt();
@@ -51,9 +52,12 @@ public class Index {
                                 int courseChoice = sc.nextInt();
                                 if (courseChoice > c.size()) {
                                     System.out.println("Please choose the correct course number to enroll");
-                                } else {
-                                    System.out.println(courseChoice - 1);
-                                    enroll(c.get(courseChoice - 1).name, name);
+                                } else {                                    
+                                    if (t.coursetaken.contains(c.get(courseChoice - 1).name)) {
+                                        System.out.println("Course_Already_Enrolled");
+                                    } else {
+                                        t.enroll(c.get(courseChoice - 1).name, temp);
+                                    }
                                 }
                             }
                             case 2 -> {
@@ -67,7 +71,11 @@ public class Index {
                                 if (courseChoice > c.size()) {
                                     System.out.println("Please choose the correct course number to enroll");
                                 } else {
-                                    unenroll(c.get(courseChoice - 1).name, name);
+                                    if (t.coursetaken.contains(c.get(courseChoice - 1).name)) {
+                                        t.unenroll(c.get(courseChoice - 1).name, temp);
+                                    } else {
+                                        System.out.println("You did not enroll to this course before");
+                                    }
                                 }
                             }
                             case 3 -> {
@@ -98,7 +106,17 @@ public class Index {
                                 sc.nextLine();
                                 System.out.print("Enter professor name: ");
                                 String prof = sc.nextLine();
-                                assignLecturers(c.get(courseAssign-1).name,prof);
+                                if (ccheck(c.get(courseAssign-1).name)) {
+                                    if (pcheck(prof, c.get(courseAssign-1).name)) {
+                                        Course.modify(c.get(courseAssign-1).name, prof);
+                                        System.out.println("Modify_Success");
+                                    } else {
+                                        System.out.println("No_Such_Professor_to_Modify_in_course");
+                                    }
+                                } else {
+                                System.out.println("No_Such_Course_to_Modify");
+                                }
+                                
                             }
                             case 2 -> {
                                 //add course
@@ -223,41 +241,6 @@ public class Index {
             }
         }
         ip.close();
-    }
-
-    public static void assignLecturers(String course, String prof) {
-        if (ccheck(course)) {
-            if (pcheck(prof, course)) {
-                Course.modify(course, prof);
-                System.out.println("Modify_Success");
-            } else {
-                System.out.println("No_Such_Professor_to_Modify_in_course");
-            }
-        } else {
-            System.out.println("No_Such_Course_to_Modify");
-        }
-    }
-
-    public static void enroll(String course, String student) {
-        int temp = scheck(student);
-        Student t = s.get(temp);
-        if (t.coursetaken.contains(course)) {
-            System.out.println("Course_Already_Enrolled");
-        } else {
-            t.enroll(course, temp);
-        }
-
-    }
-
-    public static void unenroll(String course, String student) {
-        int temp = scheck(student);
-        Student t = s.get(temp);
-        if (t.coursetaken.contains(course)) {
-            t.unenroll(course, temp);
-        } else {
-            System.out.println("You did not enroll to this course before");
-        }
-
     }
 
     public static void displayS() {
