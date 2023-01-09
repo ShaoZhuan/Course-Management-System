@@ -1,0 +1,13 @@
+ADDS anurag 1 1
+ADDP thomas algo
+ADDP galvin os
+ADDP forozan network
+ADDC operatingsys 5 galvin 1 
+ADDC algorithm 3 raja 1
+ADDC algorithm 3 thomas 1
+ADDS bansal 2 2
+ADDP chew programming
+ADDP agnes communication
+ADDC realtimesys 4 chew 1
+ADDP moon architecture
+ADDC designpattern 3 moon 1
