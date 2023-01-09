@@ -63,7 +63,7 @@ public class Student {
 		}
 	}
 	
-	public static void show(int myidx){
+	public void show(int myidx){
 		System.out.println("Student_Name:" + CourseManagementSystem.s.get(myidx).name + " ");
 		System.out.println("Student_Rollno:" + CourseManagementSystem.s.get(myidx).rollno + " ");
 		System.out.println("Student_Year:" + CourseManagementSystem.s.get(myidx).year + " ");

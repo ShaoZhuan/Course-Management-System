@@ -23,7 +23,7 @@ public class Prof {
 		this.area = area;
 	}
 	
-	public static void show(int pidx){
+	public void show(int pidx){
 		System.out.println("Prof_Name:" + CourseManagementSystem.p.get(pidx).name + " ");
 		System.out.println("Prof_Area:" + CourseManagementSystem.p.get(pidx).area + " ");
 		if(CourseManagementSystem.p.get(pidx).coursetaking.isEmpty()){

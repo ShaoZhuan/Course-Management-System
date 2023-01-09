@@ -18,7 +18,7 @@ public class Course {
     public int max;
     public int yr;
 
-    public List<String> studenrolled = new ArrayList<String>();
+    public List<String> studenrolled = new ArrayList<>();
     
     public Course(){}
     
@@ -37,7 +37,7 @@ public class Course {
     }
     
 
-    public static void modify(String a, String newprof) {
+    public void modify(String a, String newprof) {
         int cidx = 0;
         for (int i = 0; i < CourseManagementSystem.c.size(); i++) {
             if (CourseManagementSystem.c.get(i).name.equals(a)) {
@@ -48,7 +48,7 @@ public class Course {
         CourseManagementSystem.c.get(cidx).profes = newprof;
     }
     
-    public static void show(String a) {
+    public void show(String a) {
         int cidx = 0;
         for (int i = 0; i < CourseManagementSystem.c.size(); i++) {
             if (CourseManagementSystem.c.get(i).name.equals(a)) {
