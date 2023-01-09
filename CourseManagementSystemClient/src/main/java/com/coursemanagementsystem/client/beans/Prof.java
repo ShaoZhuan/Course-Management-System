@@ -27,7 +27,7 @@ public class Prof {
 		System.out.println("Prof_Name:" + CourseManagementSystem.p.get(pidx).name + " ");
 		System.out.println("Prof_Area:" + CourseManagementSystem.p.get(pidx).area + " ");
 		if(CourseManagementSystem.p.get(pidx).coursetaking.isEmpty()){
-			System.out.println("Prof_Courses: No_courses_taken");
+			System.out.print("Prof_Courses: No_courses_taken");
 		}
 		else{
 			System.out.print("Prof_Courses:");
