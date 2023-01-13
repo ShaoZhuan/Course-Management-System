@@ -4,11 +4,13 @@ import com.coursemanagementsystem.client.beans.Course;
 import com.coursemanagementsystem.client.beans.Prof;
 import com.coursemanagementsystem.client.beans.Student;
 import com.coursemanagementsystem.client.beans.Timetable;
-import java.io.File;
-import java.io.FileNotFoundException;
+import com.coursemanagementsystem.client.db.DBConnection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import net.sf.jasperreports.engine.JRException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -22,31 +24,53 @@ public class CourseManagementSystem {
     public static List<Prof> p = new ArrayList<>();
     public static List<Course> c = new ArrayList<>();
     public static List<Student> s = new ArrayList<>();
-    
-    
-    private static Course course;    
+
+    private static Course course;
     private static Student student;
     private static Prof prof;
     private static Timetable timetable;
+    private static DBConnection db = new DBConnection();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws JRException, SQLException {
         ApplicationContext context = SpringApplication.run(CourseManagementSystem.class, args);
         course = context.getBean(Course.class);
         student = context.getBean(Student.class);
         prof = context.getBean(Prof.class);
+        timetable = context.getBean(Timetable.class);
+        timetable.generate();
 
-        Scanner sc = new Scanner(System.in);
-        try {
-            readFile();
-        } catch (FileNotFoundException ex) {
-            System.out.println("File not found");
-        }
+        readDB();
+
+        start();
+//        System.out.println("Program Stop!\n");
         System.out.println("Student:");
         displayS();
         System.out.println("Professor:");
         displayP();
         System.out.println("Course:");
         displayC();
+    }
+
+    public static void readDB() throws SQLException {
+        //get course
+        ResultSet rs = db.retrieve("SELECT * FROM course");
+        while (rs.next()) {
+            c.add(new Course(rs.getString("name"),rs.getInt("max"),rs.getString("prof"),rs.getInt("year"),rs.getInt("start_time"),rs.getInt("duration"),rs.getString("day")));
+        }
+        //get student
+        rs = db.retrieve("SELECT * FROM student");
+        while (rs.next()) {
+            s.add(new Student(rs.getString("name"),rs.getInt("rollno"),rs.getInt("year")));
+        }
+        //get prof
+        rs = db.retrieve("SELECT * FROM prof");
+        while (rs.next()) {
+            p.add(new Prof(rs.getString("name"),rs.getString("area")));
+        }
+    }
+
+    public static void start() throws JRException, SQLException {
+        Scanner sc = new Scanner(System.in);
         userRole:
         for (;;) {
             System.out.print("Choose 1 for Student, Choose 2 for Faculty Admin, Choose 3 to exit: ");
@@ -77,7 +101,7 @@ public class CourseManagementSystem {
                                 if (courseChoice > c.size()) {
                                     System.out.println("Please choose the correct course number to enroll");
                                 } else {
-                                    if (t.coursetaken.contains(c.get(courseChoice - 1).name)) {
+                                    if (t.coursetaken.contains(c.get(courseChoice - 1))) {
                                         System.out.println("Course_Already_Enrolled");
                                     } else {
                                         t.enroll(c.get(courseChoice - 1).name, temp);
@@ -95,7 +119,7 @@ public class CourseManagementSystem {
                                 if (courseChoice > c.size()) {
                                     System.out.println("Please choose the correct course number to enroll");
                                 } else {
-                                    if (t.coursetaken.contains(c.get(courseChoice - 1).name)) {
+                                    if (t.coursetaken.contains(c.get(courseChoice - 1))) {
                                         t.unenroll(c.get(courseChoice - 1).name, temp);
                                     } else {
                                         System.out.println("You did not enroll to this course before");
@@ -159,7 +183,15 @@ public class CourseManagementSystem {
                                 int max = sc.nextInt();
                                 System.out.print("Enter which year of student can enroll: ");
                                 int year = sc.nextInt();
-                                c.add(new Course(courseName, max, profName, year));
+                                System.out.print("Enter what is the start time: ");
+                                int startTime = sc.nextInt();
+                                System.out.print("Enter what is the duration: ");
+                                int duration = sc.nextInt();
+                                sc.nextLine();
+                                System.out.print("Enter what day of the class: ");
+                                String day = sc.nextLine();
+                                c.add(new Course(courseName, max, profName, year, startTime, duration,day));
+                                db.insert("INSERT INTO course(name,prof,max,year,start_time,duration,day) VALUES('"+courseName+"','"+profName+"',"+max+","+year+","+startTime+","+duration+","+day+")");
                             }
                             case 3 -> {
                                 //edit course                               
@@ -206,6 +238,7 @@ public class CourseManagementSystem {
                                 String confirm = sc.nextLine();
                                 if (confirm.equals("Y")) {
                                     c.remove(courseDelete - 1);
+                                    db.remove("DELETE FROM course where name='"+c.get(courseDelete - 1).name+"'");
                                     System.out.println("This course has been deleted.");
                                 }
 
@@ -225,47 +258,6 @@ public class CourseManagementSystem {
                     System.out.println("Invalid Choice. Try Again.");
             }
         }
-        System.out.println("Program Stop!\n");
-        System.out.println("Student:");
-        displayS();
-        System.out.println("Professor:");
-        displayP();
-        System.out.println("Course:");
-        displayC();
-    }
-
-    public static void readFile() throws FileNotFoundException {
-        Scanner ip = new Scanner(new File("input.txt"));
-        int x, y, yr;
-        String a, b, n, d, input;
-        while (ip.hasNext()) {
-            input = ip.next();
-            if (input.equalsIgnoreCase("ADDS")) {
-                a = ip.next();
-                x = ip.nextInt();
-                y = ip.nextInt();
-                s.add(new Student(a, x, y));
-            } else if (input.equalsIgnoreCase("ADDP")) {
-                a = ip.next();
-                b = ip.next();
-                p.add(new Prof(a, b));
-            } else if (input.equalsIgnoreCase("ADDC")) {
-                a = ip.next();
-                x = ip.nextInt();
-                b = ip.next();
-                yr = ip.nextInt();
-                if (ccheck(a)) {
-                    System.out.println("Course_Already_Exists");
-                } else {
-                    if (pcheck(b, a)) {
-                        c.add(new Course(a, x, b, yr));
-                    } else {
-                        System.out.println("No_such_Professor");
-                    }
-                }
-            }
-        }
-        ip.close();
     }
 
     public static void displayS() {

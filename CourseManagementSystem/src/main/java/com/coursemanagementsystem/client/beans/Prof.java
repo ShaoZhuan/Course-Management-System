@@ -5,6 +5,7 @@
 package com.coursemanagementsystem.client.beans;
 
 import com.coursemanagementsystem.client.CourseManagementSystem;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Component;
@@ -15,10 +16,10 @@ public class Prof {
 	public String area;
 	
 	public List<String> coursetaking = new ArrayList<>();
-	
+        
         public Prof(){}
         
-	public Prof(String name,String area){
+	public Prof(String name,String area) throws SQLException{
 		this.name = name;
 		this.area = area;
 	}
