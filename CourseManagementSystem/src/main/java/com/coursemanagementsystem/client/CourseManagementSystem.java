@@ -10,7 +10,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import net.sf.jasperreports.engine.JRException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -31,18 +30,18 @@ public class CourseManagementSystem {
     private static Timetable timetable;
     private static DBConnection db = new DBConnection();
 
-    public static void main(String[] args) throws JRException, SQLException {
+    public static void main(String[] args) throws SQLException {
         ApplicationContext context = SpringApplication.run(CourseManagementSystem.class, args);
         course = context.getBean(Course.class);
         student = context.getBean(Student.class);
         prof = context.getBean(Prof.class);
         timetable = context.getBean(Timetable.class);
-        timetable.generate();
+        
 
         readDB();
 
         start();
-//        System.out.println("Program Stop!\n");
+        System.out.println("Program Stop!\n");
         System.out.println("Student:");
         displayS();
         System.out.println("Professor:");
@@ -69,7 +68,7 @@ public class CourseManagementSystem {
         }
     }
 
-    public static void start() throws JRException, SQLException {
+    public static void start() throws SQLException {
         Scanner sc = new Scanner(System.in);
         userRole:
         for (;;) {
@@ -93,7 +92,7 @@ public class CourseManagementSystem {
                             case 1 -> {
                                 //enroll course
                                 for (int i = 0; i < c.size(); i++) {
-                                    System.out.println(i + 1 + " : " + c.get(i).name);
+                                    System.out.println(i + 1 + " : " + c.get(i).name+" "+c.get(i).day+" ("+c.get(i).startTime+" - "+(c.get(i).startTime+c.get(i).duration)+")");
                                 }
                                 System.out.println();
                                 System.out.print("Please choose a course to enroll:");
@@ -111,13 +110,13 @@ public class CourseManagementSystem {
                             case 2 -> {
                                 //unenroll course
                                 for (int i = 0; i < c.size(); i++) {
-                                    System.out.println(i + 1 + " : " + c.get(i).name);
+                                    System.out.println(i + 1 + " : " + c.get(i).name+" "+c.get(i).day+" ("+c.get(i).startTime+" - "+(c.get(i).startTime+c.get(i).duration)+")");
                                 }
                                 System.out.println();
-                                System.out.print("Please choose a course to enroll:");
+                                System.out.print("Please choose a course to unenroll:");
                                 int courseChoice = sc.nextInt();
                                 if (courseChoice > c.size()) {
-                                    System.out.println("Please choose the correct course number to enroll");
+                                    System.out.println("Please choose the correct course number to unenroll");
                                 } else {
                                     if (t.coursetaken.contains(c.get(courseChoice - 1))) {
                                         t.unenroll(c.get(courseChoice - 1).name, temp);
@@ -128,7 +127,8 @@ public class CourseManagementSystem {
                             }
                             case 3 -> {
                                 //generate timetable
-                                timetable.generate();
+                                timetable.setStudent(t);
+                                timetable.generateIText();
                             }
                             case 4 -> {
                                 //exit program

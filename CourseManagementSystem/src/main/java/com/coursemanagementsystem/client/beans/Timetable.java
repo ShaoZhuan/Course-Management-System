@@ -4,14 +4,14 @@
  */
 package com.coursemanagementsystem.client.beans;
 
-import net.sf.jasperreports.engine.JRDataSource;
-import net.sf.jasperreports.engine.JREmptyDataSource;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Table;
+import java.io.FileNotFoundException;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -20,15 +20,53 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class Timetable {
+    private Student student;
+
+    public void setStudent(Student student) {
+        this.student = student;
+    }
     
     
-    public void generate() throws JRException{
-        JasperReport jasperReport = JasperCompileManager.compileReport("Timetable.jrxml");
-        
-        JRDataSource jrDataSource = new JREmptyDataSource();
-        
-        JasperPrint print = JasperFillManager.fillReport(jasperReport, null,jrDataSource);
-        JasperExportManager.exportReportToPdfFile(print,"Timetable.pdf");
-        
+
+    public void generateIText() {
+        String fileName = "Timetable.pdf";
+        try {
+            PdfWriter writer = new PdfWriter(fileName);
+            PdfDocument pdfdoc = new PdfDocument(writer);
+            pdfdoc.addNewPage();            
+            Document document = new Document(pdfdoc);
+            float columnWidth[] = {100f, 200f, 200f, 200f, 200f, 200f};
+            Table table = new Table(columnWidth);
+
+            List<String> day = List.of("Monday", "Tuesday", "Wednesday", "Thursday", "Friday");
+
+            table.addCell(new Cell().add("Time\\Day"));
+            for (int i = 0; i < day.size(); i++) {
+                table.addCell(new Cell().add(day.get(i)));
+            }
+            for (int i = 8; i <= 17; i++) {
+                table.addCell(new Cell().add(i + ":00"));
+                for (int j = 0; j < day.size(); j++) {
+                    String currentday = day.get(j);
+                    String courseName="";
+                    for (int k = 0; k < student.coursetaken.size(); k++) {
+                        Course course = student.coursetaken.get(k);
+                        int courseET = course.startTime+course.duration;
+                        if(course.day.equalsIgnoreCase(currentday) && ( i>=course.startTime && i<courseET )){
+                            courseName = course.name;
+                        }
+                    }
+                    table.addCell(new Cell().add(courseName));
+                }
+
+            }
+
+            document.add(table);
+
+            document.close();
+            System.out.println("Timetable is generated. Please check your file");
+        } catch (FileNotFoundException e) {
+            System.out.println("File is not found");
+        }
     }
 }

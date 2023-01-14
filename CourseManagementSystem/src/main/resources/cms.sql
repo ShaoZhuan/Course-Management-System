@@ -4,7 +4,7 @@
 -- https://tableplus.com/
 --
 -- Database: cms
--- Generation Time: 2023-01-14 01:05:49.5150
+-- Generation Time: 2023-01-14 16:47:02.7720
 -- -------------------------------------------------------------
 
 
@@ -57,10 +57,10 @@ CREATE TABLE `student_course` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `course` (`id`, `prof`, `max`, `year`, `start_time`, `duration`, `name`, `day`) VALUES
-(1, 'galvin', 5, 1, 2, 2, 'operatingsys', 'Monday'),
+(1, 'galvin', 5, 1, 10, 2, 'operatingsys', 'Monday'),
 (2, 'thomas', 3, 1, 8, 4, 'algorithm', 'Tuesday'),
-(3, 'chew', 4, 1, 10, 2, 'realtimesys', 'Wednesday'),
-(4, 'moon', 3, 1, 15, 3, 'designpattern', 'Tuesday');
+(3, 'chew', 4, 1, 12, 2, 'realtimesys', 'Wednesday'),
+(4, 'moon', 3, 1, 13, 3, 'designpattern', 'Tuesday');
 
 INSERT INTO `prof` (`id`, `name`, `area`) VALUES
 (1, 'thomas', 'algo'),
