@@ -14,10 +14,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-/**
- *
- * @author hng
- */
 @Component
 public class Timetable {
     private Student student;

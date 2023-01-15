@@ -36,7 +36,6 @@ public class CourseManagementSystem {
         student = context.getBean(Student.class);
         prof = context.getBean(Prof.class);
         timetable = context.getBean(Timetable.class);
-        
 
         readDB();
 
@@ -51,20 +50,22 @@ public class CourseManagementSystem {
     }
 
     public static void readDB() throws SQLException {
-        //get course
-        ResultSet rs = db.retrieve("SELECT * FROM course");
+        ResultSet rs;
+        //get prof
+        rs = db.retrieve("SELECT * FROM prof");
         while (rs.next()) {
-            c.add(new Course(rs.getString("name"),rs.getInt("max"),rs.getString("prof"),rs.getInt("year"),rs.getInt("start_time"),rs.getInt("duration"),rs.getString("day")));
+            p.add(new Prof(rs.getString("name"), rs.getString("area")));
+        }
+        //get course
+        rs = db.retrieve("SELECT * FROM course");
+        while (rs.next()) {
+            c.add(new Course(rs.getString("name"), rs.getInt("max"), rs.getString("prof"), rs.getInt("year"), rs.getInt("start_time"), rs.getInt("duration"), rs.getString("day")));
+            prof.assignCourse(rs.getString("name"), rs.getString("prof"), "");
         }
         //get student
         rs = db.retrieve("SELECT * FROM student");
         while (rs.next()) {
-            s.add(new Student(rs.getString("name"),rs.getInt("rollno"),rs.getInt("year")));
-        }
-        //get prof
-        rs = db.retrieve("SELECT * FROM prof");
-        while (rs.next()) {
-            p.add(new Prof(rs.getString("name"),rs.getString("area")));
+            s.add(new Student(rs.getString("name"), rs.getInt("rollno"), rs.getInt("year")));
         }
     }
 
@@ -92,7 +93,7 @@ public class CourseManagementSystem {
                             case 1 -> {
                                 //enroll course
                                 for (int i = 0; i < c.size(); i++) {
-                                    System.out.println(i + 1 + " : " + c.get(i).name+" "+c.get(i).day+" ("+c.get(i).startTime+" - "+(c.get(i).startTime+c.get(i).duration)+")");
+                                    System.out.println(i + 1 + " : " + c.get(i).name + " " + c.get(i).day + " (" + c.get(i).startTime + " - " + (c.get(i).startTime + c.get(i).duration) + ")");
                                 }
                                 System.out.println();
                                 System.out.print("Please choose a course to enroll:");
@@ -110,7 +111,7 @@ public class CourseManagementSystem {
                             case 2 -> {
                                 //unenroll course
                                 for (int i = 0; i < c.size(); i++) {
-                                    System.out.println(i + 1 + " : " + c.get(i).name+" "+c.get(i).day+" ("+c.get(i).startTime+" - "+(c.get(i).startTime+c.get(i).duration)+")");
+                                    System.out.println(i + 1 + " : " + c.get(i).name + " " + c.get(i).day + " (" + c.get(i).startTime + " - " + (c.get(i).startTime + c.get(i).duration) + ")");
                                 }
                                 System.out.println();
                                 System.out.print("Please choose a course to unenroll:");
@@ -152,18 +153,20 @@ public class CourseManagementSystem {
                                 System.out.println();
                                 System.out.print("Please choose a course to assign:");
                                 int courseAssign = sc.nextInt();
-                                sc.nextLine();
-                                System.out.print("Enter professor name: ");
-                                String profName = sc.nextLine();
-                                if (ccheck(c.get(courseAssign - 1).name)) {
-                                    if (pcheck(profName, c.get(courseAssign - 1).name)) {
-                                        course.modify(c.get(courseAssign - 1).name, profName);
-                                        System.out.println("Modify_Success");
+                                for (int i = 0; i < p.size(); i++) {
+                                    System.out.println(i + 1 + " : " + p.get(i).name);
+                                }
+                                System.out.print("Please choose a professor to assign:");
+                                int profChoice = sc.nextInt();
+                                if (profChoice > p.size()) {
+                                    System.out.println("Please choose the correct professor number to unenroll");
+                                } else {
+                                    if (prof.assignCourse(c.get(courseAssign - 1).name, p.get(profChoice - 1).name, c.get(courseAssign - 1).profes)) {
+                                        course.modify(c.get(courseAssign - 1).name, p.get(profChoice - 1).name);
+                                        System.out.println("Assign Professor Success");
                                     } else {
                                         System.out.println("No_Such_Professor_to_Modify_in_course");
                                     }
-                                } else {
-                                    System.out.println("No_Such_Course_to_Modify");
                                 }
 
                             }
@@ -179,6 +182,9 @@ public class CourseManagementSystem {
                                 }
                                 System.out.print("Enter professor name: ");
                                 String profName = sc.nextLine();
+                                if(pcheck2(profName)==-1){                                    
+                                    System.out.println("There is no this prof in the system");                                
+                                }
                                 System.out.print("Enter maximum student can enroll: ");
                                 int max = sc.nextInt();
                                 System.out.print("Enter which year of student can enroll: ");
@@ -190,8 +196,12 @@ public class CourseManagementSystem {
                                 sc.nextLine();
                                 System.out.print("Enter what day of the class: ");
                                 String day = sc.nextLine();
-                                c.add(new Course(courseName, max, profName, year, startTime, duration,day));
-                                db.insert("INSERT INTO course(name,prof,max,year,start_time,duration,day) VALUES('"+courseName+"','"+profName+"',"+max+","+year+","+startTime+","+duration+","+day+")");
+                                c.add(new Course(courseName, max, profName, year, startTime, duration, day));
+                                prof.assignCourse(courseName, profName, "");
+                                db.insert("INSERT INTO course(name,prof,max,year,start_time,duration,day) VALUES('" + courseName + "','" + profName + "'," + max + "," + year + "," + startTime + "," + duration + ",'" + day + "')");
+                                
+                                    
+                                
                             }
                             case 3 -> {
                                 //edit course                               
@@ -219,6 +229,7 @@ public class CourseManagementSystem {
                                 c.get(courseEdit - 1).editDetail(courseName, max, year);
                                 System.out.println("Update Successful");
                                 course.show(courseName);
+                                System.out.println("");
                             }
                             case 4 -> {
                                 //delete course
@@ -237,8 +248,8 @@ public class CourseManagementSystem {
                                 System.out.print("Please enter Y/N: ");
                                 String confirm = sc.nextLine();
                                 if (confirm.equals("Y")) {
+                                    db.remove("DELETE FROM course where name='" + c.get(courseDelete - 1).name + "'");
                                     c.remove(courseDelete - 1);
-                                    db.remove("DELETE FROM course where name='"+c.get(courseDelete - 1).name+"'");
                                     System.out.println("This course has been deleted.");
                                 }
 
@@ -290,23 +301,13 @@ public class CourseManagementSystem {
         return 0;
     }
 
-    public static boolean pcheck(String name, String course) {
-        for (int i = 0; i < p.size(); i++) {
-            if (p.get(i).name.equals(name)) {
-                p.get(i).coursetaking.add(course);
-                return true;
-            }
-        }
-        return false;
-    }
-
     public static int pcheck2(String name) {
         for (int i = 0; i < p.size(); i++) {
             if (p.get(i).name.equals(name)) {
                 return i;
             }
         }
-        return 0;
+        return -1;
     }
 
     public static boolean ccheck(String name) {
