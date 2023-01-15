@@ -159,7 +159,7 @@ public class CourseManagementSystem {
                                 System.out.print("Please choose a professor to assign:");
                                 int profChoice = sc.nextInt();
                                 if (profChoice > p.size()) {
-                                    System.out.println("Please choose the correct professor number to unenroll");
+                                    System.out.println("Please choose the correct professor number to assign");
                                 } else {
                                     if (prof.assignCourse(c.get(courseAssign - 1).name, p.get(profChoice - 1).name, c.get(courseAssign - 1).profes)) {
                                         course.modify(c.get(courseAssign - 1).name, p.get(profChoice - 1).name);
@@ -212,7 +212,7 @@ public class CourseManagementSystem {
                                 System.out.print("Please choose a course to edit:");
                                 int courseEdit = sc.nextInt();
                                 if (courseEdit > c.size()) {
-                                    System.out.println("Please choose the correct course number to enroll");
+                                    System.out.println("Please choose the correct course number to edit");
                                     continue;
                                 }
                                 sc.nextLine();
@@ -241,7 +241,7 @@ public class CourseManagementSystem {
                                 int courseDelete = sc.nextInt();
                                 sc.nextLine();
                                 if (courseDelete > c.size()) {
-                                    System.out.println("Please choose the correct course number to enroll");
+                                    System.out.println("Please choose the correct course number to delete");
                                     continue;
                                 }
                                 System.out.println("Are you confirm to delete this course: " + c.get(courseDelete - 1).name);
