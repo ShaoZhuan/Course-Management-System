@@ -45,7 +45,7 @@ public class Student {
                         int currEndTime = current.startTime+current.duration;
                         if(current.day.equals(tempC.day) && ((current.startTime>tempC.startTime && current.startTime<tempEndTime) || (currEndTime>tempC.startTime && currEndTime<tempEndTime) )){                            
                             crash = true;
-                            System.out.println("Crash time with course "+tempC.name);
+                            System.out.println("Clash time with course "+tempC.name);
                             break;
                         }
                         

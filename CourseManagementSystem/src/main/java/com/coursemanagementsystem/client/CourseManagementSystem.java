@@ -199,7 +199,7 @@ public class CourseManagementSystem {
                                 c.add(new Course(courseName, max, profName, year, startTime, duration, day));
                                 prof.assignCourse(courseName, profName, "");
                                 db.insert("INSERT INTO course(name,prof,max,year,start_time,duration,day) VALUES('" + courseName + "','" + profName + "'," + max + "," + year + "," + startTime + "," + duration + ",'" + day + "')");
-                                
+                                System.out.println("Course added successfully");
                                     
                                 
                             }
